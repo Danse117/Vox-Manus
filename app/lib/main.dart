@@ -1,53 +1,22 @@
+import 'package:app/views/home.dart';
 import 'package:flutter/material.dart';
 
-
 void main(){
-
-  runApp( MyApp() );
+  runApp( const MyApp() );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
 
-class _MyAppState extends State<MyApp> {
   @override
-  Widget build(BuildContext context) { // Returns a widget when flutter reloads app
+  Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.amber,
-          title: const Text('Vox Manus'),
+      debugShowCheckedModeBanner: true,
+      theme: ThemeData(
+        fontFamily: 'Sans-serif',
         ),
-        
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            print("pressed");
-          },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            )
-          ]
-        ),
-        drawer: Drawer(
-          child: Text('Yo!')
-        ),
-      ),
-    );
+      home: const HomePage()
+      );
   }
 }
