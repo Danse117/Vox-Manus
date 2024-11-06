@@ -11,6 +11,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isWorking = false;
+  String result = "";
+  CameraController cameraController;
+  CameraImage imgCamera;
+
+  initCamera() {
+    cameraController = CameraController(cameras[0], ResolutionPreset.medium);
+    cameraController.initialize().then((value) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        cameraController.startImageStream((imageFromStream) =>
+            // ignore: unnecessary_set_literal
+            {
+              if (!isWorking)
+                {
+                  isWorking = true,
+                  imgCamera = imageFromStream,
+                }
+            });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +45,47 @@ class _HomePageState extends State<HomePage> {
         child: Scaffold(
           appBar: appBar(),
           backgroundColor: AppTheme.colors.darkLightBackgroundColor,
+        
           body: Container(
+            decoration: BoxDecoration(
+              color: AppTheme.colors.primaryColor,
+            ),
             child: Column(
               children: [
-                Center(
-                  child: Container(
-                    height: 320,
-                    width: 320,
-                    color: AppTheme.colors.primaryColor,
-                  )
-                ),
+                Stack(
+                  children: [
+                    Center(
+                      child: Container(
+                          color: Colors.black,
+                          height: 320,
+                          width: 330,
+                          child: Image.asset("assets/camera.png")),
+                    ),
+                    Center(
+                        child: TextButton(
+                          onPressed: (){
+                            initCamera();
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 35),
+                            height: 270,
+                            width: 360,
+                            // ignore: unnecessary_null_comparison
+                            child: imgCamera == null
+                                ? Container(
+                              height: 270,
+                              width: 360,
+                              child: const Icon(Icons.photo_camera_back,
+                                  color: Colors.black, size: 40),
+                            )
+                                : AspectRatio(
+                              aspectRatio: cameraController.value.aspectRatio,
+                              child: CameraPreview(cameraController),
+                            ),
+                          ),
+                        )),
+                  ],
+                )
               ],
             ),
           ),

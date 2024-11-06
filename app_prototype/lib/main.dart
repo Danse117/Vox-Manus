@@ -1,6 +1,6 @@
-import 'package:app_prototype/views/home.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'views/splashpage.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Sans-serif',
         ),
-      home: const HomePage()
+      home: AppSplashPage()
       );
   }
 }
