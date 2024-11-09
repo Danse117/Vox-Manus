@@ -13,79 +13,123 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isWorking = false;
   String result = "";
-  CameraController cameraController;
-  CameraImage imgCamera;
+  late CameraController cameraController;
+  late CameraImage imgCamera;
+  bool isCameraInitialized = false;
+  bool isCameraOn = true;  // New flag to control camera state
+  String errorMessage = '';
 
-  initCamera() {
-    cameraController = CameraController(cameras[0], ResolutionPreset.medium);
-    cameraController.initialize().then((value) {
-      if (!mounted) {
-        return;
-      }
+  @override
+  void initState() {
+    super.initState();
+    initCamera();
+  }
 
-      setState(() {
-        cameraController.startImageStream((imageFromStream) =>
-            // ignore: unnecessary_set_literal
-            {
-              if (!isWorking)
-                {
-                  isWorking = true,
-                  imgCamera = imageFromStream,
-                }
-            });
+  void initCamera() {
+    if (isCameraInitialized || !isCameraOn) return;
+
+    try {
+      cameraController = CameraController(
+        cameras[0],
+        ResolutionPreset.medium,
+      );
+
+      cameraController.initialize().then((_) {
+        if (!mounted) return;
+
+        setState(() {
+          isCameraInitialized = true;
+          cameraController.startImageStream((imageFromStream) {
+            if (!isWorking) {
+              setState(() {
+                isWorking = true;
+                imgCamera = imageFromStream;
+              });
+            }
+          });
+        });
+      }).catchError((e) {
+        setState(() {
+          errorMessage = 'Error initializing camera: $e';
+        });
+        print(errorMessage);
       });
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Error setting up camera: $e';
+      });
+      print(errorMessage);
+    }
+  }
+
+  // Toggle the camera on/off based on the switch
+  void toggleCamera(bool value) {
+    setState(() {
+      isCameraOn = value;
+
+      if (isCameraOn) {
+        initCamera();
+      } else if (isCameraInitialized) {
+        cameraController.stopImageStream();
+        isCameraInitialized = false;
+      }
     });
   }
 
   @override
+  void dispose() {
+    cameraController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Returns a widget when flutter reloads app
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
           appBar: appBar(),
           backgroundColor: AppTheme.colors.darkLightBackgroundColor,
-        
           body: Container(
             decoration: BoxDecoration(
               color: AppTheme.colors.primaryColor,
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Stack(
                   children: [
                     Center(
-                      child: Container(
-                          color: Colors.black,
-                          height: 320,
-                          width: 330,
-                          child: Image.asset("assets/camera.png")),
+                      child: CameraWidget(
+                        cameraController: cameraController,
+                        isCameraInitialized: isCameraInitialized,
+                        errorMessage: errorMessage,
+                      ),
                     ),
-                    Center(
-                        child: TextButton(
-                          onPressed: (){
-                            initCamera();
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 35),
-                            height: 270,
-                            width: 360,
-                            // ignore: unnecessary_null_comparison
-                            child: imgCamera == null
-                                ? Container(
-                              height: 270,
-                              width: 360,
-                              child: const Icon(Icons.photo_camera_back,
-                                  color: Colors.black, size: 40),
-                            )
-                                : AspectRatio(
-                              aspectRatio: cameraController.value.aspectRatio,
-                              child: CameraPreview(cameraController),
-                            ),
-                          ),
-                        )),
                   ],
-                )
+                ),
+                // Toggle switch for turning the camera on and off
+                Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Camera",
+                        style: TextStyle(
+                          color: AppTheme.colors.darkBackgroundColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Switch(
+                        value: isCameraOn,
+                        onChanged: toggleCamera,
+                        inactiveThumbColor: AppTheme.colors.primaryColor,
+                        inactiveTrackColor: AppTheme.colors.darkLightBackgroundColor,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -102,9 +146,10 @@ class _HomePageState extends State<HomePage> {
       title: Text(
         'Vox Manus',
         style: TextStyle(
-            color: AppTheme.colors.primaryColor,
-            fontSize: 30,
-            fontWeight: FontWeight.bold),
+          color: AppTheme.colors.primaryColor,
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       centerTitle: true,
       toolbarHeight: 50,
@@ -115,7 +160,7 @@ class _HomePageState extends State<HomePage> {
   // Bottom Nav
   BottomNavigationBar bottomNav() {
     return BottomNavigationBar(
-      backgroundColor: AppTheme.colors.darkBackgroundColor,
+      backgroundColor: AppTheme.colors.darkLightBackgroundColor,
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.home, color: AppTheme.colors.primaryColor),
@@ -130,6 +175,50 @@ class _HomePageState extends State<HomePage> {
           label: 'Account',
         ),
       ],
+    );
+  }
+}
+
+// Separate widget for camera preview
+class CameraWidget extends StatelessWidget {
+  final CameraController cameraController;
+  final bool isCameraInitialized;
+  final String errorMessage;
+
+  const CameraWidget({
+    required this.cameraController,
+    required this.isCameraInitialized,
+    required this.errorMessage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (errorMessage.isNotEmpty) {
+      return Center(
+        child: Text(
+          errorMessage,
+          style: const TextStyle(color: Colors.red, fontSize: 16),
+        ),
+      );
+    }
+
+    if (!isCameraInitialized || !cameraController.value.isInitialized) {
+      return Container(
+        color: Colors.black,
+        height: 320,
+        width: 330,
+        child: const Icon(Icons.photo_camera_back,
+            color: Colors.white, size: 40),
+      );
+    }
+
+    return SizedBox(
+      height: 320,
+      width: 330,
+      child: AspectRatio(
+        aspectRatio: cameraController.value.aspectRatio,
+        child: CameraPreview(cameraController),
+      ),
     );
   }
 }

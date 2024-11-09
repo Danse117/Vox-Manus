@@ -20,7 +20,7 @@ class _AppSplashPageState extends State<AppSplashPage> {
               fontSize: 30,
               fontWeight: FontWeight.bold),
         ),
-        nextScreen: const HomePage(),
+        nextScreen: HomePage(),
         splashTransition: SplashTransition.fadeTransition,
         backgroundColor: AppTheme.colors.darkBackgroundColor);
   }
