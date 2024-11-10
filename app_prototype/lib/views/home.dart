@@ -1,6 +1,7 @@
 import 'package:app_prototype/main.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:tflite/tflite.dart';
 import '../theme/app_theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,16 +20,45 @@ class _HomePageState extends State<HomePage> {
   bool isCameraOn = true;  // New flag to control camera state
   String errorMessage = '';
 
-  @override
-  void initState() {
-    super.initState();
-    initCamera();
+  // Change if new model is to be added
+  loadModel() async{
+    await Tflite.loadModel(model: "assets/First_Train_20_float32.tflite", labels: "assets/First_Train_20_float32_labels.txt");
+  }
+
+  runModelOnStream() async {
+      var recognitions = await Tflite.runModelOnFrame(bytesList: imgCamera.planes.map((plane){
+
+        return plane.bytes;
+
+        }).toList(), 
+
+        imageHeight: imgCamera.height, 
+        imageWidth: imgCamera.width,
+        imageMean: 127.5,
+        imageStd: 127.5,
+        rotation: 90,
+        numResults: 2, // Change for amount of objects to be dected
+        threshold: 0.9,
+        asynch: true
+        );
+
+      result = "";
+
+      recognitions?.forEach((response){
+        result += response["label"] + "   " + (response["confidence"] as double).toStringAsFixed(2) + "\n\n";
+
+      });
+
+      setState(() {
+        result;
+      });
+
+      isWorking = false;
   }
 
   void initCamera() {
     if (isCameraInitialized || !isCameraOn) return;
 
-    try {
       cameraController = CameraController(
         cameras[0],
         ResolutionPreset.medium,
@@ -44,22 +74,12 @@ class _HomePageState extends State<HomePage> {
               setState(() {
                 isWorking = true;
                 imgCamera = imageFromStream;
+                runModelOnStream();
               });
             }
           });
         });
-      }).catchError((e) {
-        setState(() {
-          errorMessage = 'Error initializing camera: $e';
-        });
-        print(errorMessage);
       });
-    } catch (e) {
-      setState(() {
-        errorMessage = 'Error setting up camera: $e';
-      });
-      print(errorMessage);
-    }
   }
 
   // Toggle the camera on/off based on the switch
@@ -75,11 +95,20 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-
+  
+  
   @override
-  void dispose() {
-    cameraController.dispose();
+  void initState() {
+    super.initState();
+
+    loadModel();
+    initCamera();
+  }
+  @override
+  void dispose() async {
     super.dispose();
+    cameraController.dispose();
+    await Tflite.close();
   }
 
   @override
@@ -130,6 +159,22 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+                
+                Container(
+                  margin: EdgeInsets.only(top: 55.0),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      result,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        backgroundColor: AppTheme.colors.darkBackgroundColor,
+                        fontSize: 30.0,
+                        color: Colors.white
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
               ],
             ),
           ),
