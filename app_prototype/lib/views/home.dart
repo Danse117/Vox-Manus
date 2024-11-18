@@ -1,9 +1,9 @@
 import 'package:app_prototype/main.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:tflite/tflite.dart';
+import 'package:tflite_v2/tflite_v2.dart';
 import '../theme/app_theme.dart';
-
+import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   // Change if new model is to be added
   loadModel() async{
-    await Tflite.loadModel(model: "assets/First_Train_20_float32.tflite", labels: "assets/First_Train_20_float32_labels.txt");
+    await Tflite.loadModel(model: "app/assets/First_Train_20_float32.tflite", labels: "app/assets/First_Train_20_float32_labels.txt");
   }
 
   runModelOnStream() async {
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
               setState(() {
                 isWorking = true;
                 imgCamera = imageFromStream;
-                runModelOnStream();
+                //runModelOnStream();
               });
             }
           });

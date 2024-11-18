@@ -4,13 +4,16 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
+dependencies{
+    implementation 'com.google.mlkit:object-detection:17.0.2'
 
+}
 
 android {
     // namespace = "com.example.app_prototype"
     // compileSdk = flutter.compileSdkVersion
     // ndkVersion = flutter.ndkVersion
-    namespace = "com.example.app_prototype"
+    namespace "com.example.app_prototype"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "25.1.8937393"
 
@@ -46,8 +49,8 @@ android {
         }
     }
     aaptOptions {
-        noCompress 'tflite'
-        noCompress 'lite'
+       noCompress "tflite"
+        noCompress "lite"
     }
 }
 
