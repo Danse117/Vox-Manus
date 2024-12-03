@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "780853414578",
+    "project_id": "vox-manus",
+    "storage_bucket": "vox-manus.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:780853414578:android:0317dc2b8e10a3465317ab",
+        "android_client_info": {
+          "package_name": "com.example.app_prototype"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARjfoj9IEom8ADsdpLb8Rcp51_9Qg4EoA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

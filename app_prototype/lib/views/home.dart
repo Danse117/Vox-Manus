@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:app_prototype/main.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:tflite_v2/tflite_v2.dart';
+import 'package:flutter/services.dart';
 import '../theme/app_theme.dart';
 import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -12,103 +16,88 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isWorking = false;
-  String result = "";
-  late CameraController cameraController;
-  late CameraImage imgCamera;
+  late CameraController _cameraController;
   bool isCameraInitialized = false;
-  bool isCameraOn = true;  // New flag to control camera state
+  bool isCameraOn = true;
   String errorMessage = '';
 
-  // Change if new model is to be added
-  loadModel() async{
-    await Tflite.loadModel(model: "app/assets/First_Train_20_float32.tflite", labels: "app/assets/First_Train_20_float32_labels.txt");
-  }
 
-  runModelOnStream() async {
-      var recognitions = await Tflite.runModelOnFrame(bytesList: imgCamera.planes.map((plane){
-
-        return plane.bytes;
-
-        }).toList(), 
-
-        imageHeight: imgCamera.height, 
-        imageWidth: imgCamera.width,
-        imageMean: 127.5,
-        imageStd: 127.5,
-        rotation: 90,
-        numResults: 2, // Change for amount of objects to be dected
-        threshold: 0.9,
-        asynch: true
-        );
-
-      result = "";
-
-      recognitions?.forEach((response){
-        result += response["label"] + "   " + (response["confidence"] as double).toStringAsFixed(2) + "\n\n";
-
-      });
-
-      setState(() {
-        result;
-      });
-
-      isWorking = false;
-  }
-
+/*
+Camera Functionality:
+  initCamera() 
+    - initializes the camera controller
+        - checks if the camera is already initialized or if the camera is off
+        - tries to initialize the camera controller
+        - sets the state to update the UI if the camera is initialized successfully
+  toggleCamera()
+    - toggles the camera on and off
+        - checks if the camera is already initialized or if the camera is off
+        - if the camera is on, it initializes the camera controller
+        - if the camera is off, it disposes of the camera controller
+  CameraWidget
+    - displays the camera preview
+        - displays an error message if there is an error with the camera
+        - displays a loading indicator if the camera is not initialized
+        - displays the camera preview if the camera is initialized 
+*/
   void initCamera() {
     if (isCameraInitialized || !isCameraOn) return;
-
-      cameraController = CameraController(
-        cameras[0],
+    try {
+      _cameraController = CameraController(
+        cameras[0], 
         ResolutionPreset.medium,
+        enableAudio: false,
       );
 
-      cameraController.initialize().then((_) {
+      _cameraController.initialize().then((_) {
         if (!mounted) return;
-
         setState(() {
           isCameraInitialized = true;
-          cameraController.startImageStream((imageFromStream) {
-            if (!isWorking) {
-              setState(() {
-                isWorking = true;
-                imgCamera = imageFromStream;
-                //runModelOnStream();
-              });
-            }
-          });
         });
       });
+    } catch (e) {
+      print("Camera init error: $e");
+    }
   }
 
   // Toggle the camera on/off based on the switch
   void toggleCamera(bool value) {
     setState(() {
       isCameraOn = value;
-
       if (isCameraOn) {
         initCamera();
       } else if (isCameraInitialized) {
-        cameraController.stopImageStream();
+        _cameraController.dispose();
         isCameraInitialized = false;
       }
     });
   }
-  
-  
+
+/*
+State Functionality:
+  initState()
+    - initializes the camera
+  dispose()
+    - disposes of the camera controller
+  build()
+    - displays the application UI
+        - displays the app bar
+        - displays the camera preview
+        - displays the toggle switch for the camera
+        - displays the bottom navigation bar
+*/
   @override
   void initState() {
     super.initState();
-
-    loadModel();
     initCamera();
   }
+
   @override
-  void dispose() async {
+  void dispose() {
+    if (isCameraInitialized) {
+      _cameraController.dispose();
+    }
     super.dispose();
-    cameraController.dispose();
-    await Tflite.close();
   }
 
   @override
@@ -124,12 +113,12 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 Stack(
                   children: [
                     Center(
                       child: CameraWidget(
-                        cameraController: cameraController,
+                        cameraController: _cameraController,
                         isCameraInitialized: isCameraInitialized,
                         errorMessage: errorMessage,
                       ),
@@ -154,27 +143,12 @@ class _HomePageState extends State<HomePage> {
                         value: isCameraOn,
                         onChanged: toggleCamera,
                         inactiveThumbColor: AppTheme.colors.primaryColor,
-                        inactiveTrackColor: AppTheme.colors.darkLightBackgroundColor,
+                        inactiveTrackColor:
+                            AppTheme.colors.darkLightBackgroundColor,
                       ),
                     ],
                   ),
                 ),
-                
-                Container(
-                  margin: EdgeInsets.only(top: 55.0),
-                  child: SingleChildScrollView(
-                    child: Text(
-                      result,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: AppTheme.colors.darkBackgroundColor,
-                        fontSize: 30.0,
-                        color: Colors.white
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
               ],
             ),
           ),
@@ -225,7 +199,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 // Separate widget for camera preview
-class CameraWidget extends StatelessWidget {
+class CameraWidget extends StatefulWidget {
   final CameraController cameraController;
   final bool isCameraInitialized;
   final String errorMessage;
@@ -237,33 +211,40 @@ class CameraWidget extends StatelessWidget {
   });
 
   @override
+  State<CameraWidget> createState() => _CameraWidgetState();
+}
+
+class _CameraWidgetState extends State<CameraWidget> {
+  @override
   Widget build(BuildContext context) {
-    if (errorMessage.isNotEmpty) {
+    if (widget.errorMessage.isNotEmpty) {
       return Center(
         child: Text(
-          errorMessage,
+          widget.errorMessage,
           style: const TextStyle(color: Colors.red, fontSize: 16),
         ),
       );
     }
 
-    if (!isCameraInitialized || !cameraController.value.isInitialized) {
+    if (!widget.isCameraInitialized ||
+        !widget.cameraController.value.isInitialized) {
       return Container(
         color: Colors.black,
         height: 320,
         width: 330,
-        child: const Icon(Icons.photo_camera_back,
-            color: Colors.white, size: 40),
+        child:
+            const Icon(Icons.photo_camera_back, color: Colors.white, size: 40),
       );
     }
 
     return SizedBox(
-      height: 320,
-      width: 330,
+      height: 500,
+      width: 400,
       child: AspectRatio(
-        aspectRatio: cameraController.value.aspectRatio,
-        child: CameraPreview(cameraController),
+        aspectRatio: widget.cameraController.value.aspectRatio,
+        child: CameraPreview(widget.cameraController),
       ),
     );
   }
 }
+
