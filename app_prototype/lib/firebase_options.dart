@@ -64,6 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '780853414578',
     projectId: 'vox-manus',
     storageBucket: 'vox-manus.firebasestorage.app',
+    androidClientId: '780853414578-ijahn00qrva75pr8aaftcmv8mp7jdcmr.apps.googleusercontent.com',
+    iosClientId: '780853414578-lbfoc0u0j6u7jipnbnv4p0d62m20ma8t.apps.googleusercontent.com',
     iosBundleId: 'com.example.appPrototype',
   );
 
@@ -73,6 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '780853414578',
     projectId: 'vox-manus',
     storageBucket: 'vox-manus.firebasestorage.app',
+    androidClientId: '780853414578-ijahn00qrva75pr8aaftcmv8mp7jdcmr.apps.googleusercontent.com',
+    iosClientId: '780853414578-lbfoc0u0j6u7jipnbnv4p0d62m20ma8t.apps.googleusercontent.com',
     iosBundleId: 'com.example.appPrototype',
   );
 
@@ -85,4 +89,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'vox-manus.firebasestorage.app',
     measurementId: 'G-KZMCST32LL',
   );
+
 }

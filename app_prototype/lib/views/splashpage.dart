@@ -1,7 +1,7 @@
-import 'package:app_prototype/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:app_prototype/theme/app_theme.dart';
+import 'auth_page.dart';
 
 class AppSplashPage extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _AppSplashPageState extends State<AppSplashPage> {
               fontSize: 30,
               fontWeight: FontWeight.bold),
         ),
-        nextScreen: HomePage(),
+        nextScreen: AuthPage(),
         splashTransition: SplashTransition.fadeTransition,
         backgroundColor: AppTheme.colors.darkBackgroundColor);
   }

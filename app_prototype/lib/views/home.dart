@@ -1,29 +1,34 @@
 import 'dart:io';
+import 'package:app_prototype/components/camerawidget.dart';
 import 'package:app_prototype/main.dart';
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../theme/app_theme.dart';
 import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import '../components/translatetext.dart';
+import '../components/bottomnav.dart';
+import '../components/logout.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
+  final User user = FirebaseAuth.instance.currentUser!;
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
 class _HomePageState extends State<HomePage> {
   late CameraController _cameraController;
   bool isCameraInitialized = false;
   bool isCameraOn = true;
-  String errorMessage = '';
-
-
+  bool isTextMode = false;
 /*
 Camera Functionality:
+  toggleMode()
+    - toggles the mode between text and camera  
   initCamera() 
     - initializes the camera controller
         - checks if the camera is already initialized or if the camera is off
@@ -40,12 +45,20 @@ Camera Functionality:
         - displays a loading indicator if the camera is not initialized
         - displays the camera preview if the camera is initialized 
 */
+  void toggleMode(bool value) {
+    setState(() {
+      isTextMode = value;
+      if (isTextMode && isCameraOn) {
+        toggleCamera(false);
+      }
+    });
+  }
+
   void initCamera() {
-    if (isCameraInitialized || !isCameraOn) return;
-    try {
+    if (isCameraInitialized || isCameraOn) {
       _cameraController = CameraController(
-        cameras[0], 
-        ResolutionPreset.medium,
+        cameras[0],
+        ResolutionPreset.high,
         enableAudio: false,
       );
 
@@ -55,8 +68,6 @@ Camera Functionality:
           isCameraInitialized = true;
         });
       });
-    } catch (e) {
-      print("Camera init error: $e");
     }
   }
 
@@ -105,6 +116,7 @@ State Functionality:
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
           appBar: appBar(),
           backgroundColor: AppTheme.colors.darkLightBackgroundColor,
           body: Container(
@@ -114,41 +126,68 @@ State Functionality:
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Stack(
-                  children: [
-                    Center(
-                      child: CameraWidget(
-                        cameraController: _cameraController,
-                        isCameraInitialized: isCameraInitialized,
-                        errorMessage: errorMessage,
-                      ),
-                    ),
-                  ],
-                ),
-                // Toggle switch for turning the camera on and off
+                // Mode toggle switch
                 Padding(
-                  padding: const EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Camera",
-                        style: TextStyle(
-                          color: AppTheme.colors.darkBackgroundColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Icon(Icons.camera_enhance,
+                          size: 30, color: AppTheme.colors.darkBackgroundColor),
                       Switch(
-                        value: isCameraOn,
-                        onChanged: toggleCamera,
+                        value: isTextMode,
+                        onChanged: toggleMode,
                         inactiveThumbColor: AppTheme.colors.primaryColor,
                         inactiveTrackColor:
                             AppTheme.colors.darkLightBackgroundColor,
                       ),
+                      Icon(Icons.translate,
+                          size: 30, color: AppTheme.colors.darkBackgroundColor),
                     ],
                   ),
                 ),
+                // Show either TextModeWidget or CameraWidget based on mode
+                if (isTextMode)
+                  const TextModeWidget()
+                else
+                  Column(
+                    children: [
+                      Stack(
+                        children: [
+                          Center(
+                            child: CameraWidget(
+                              cameraController: _cameraController,
+                              isCameraInitialized: isCameraInitialized,
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Camera toggle
+                      Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Camera",
+                              style: TextStyle(
+                                color: AppTheme.colors.darkBackgroundColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Switch(
+                              value: isCameraOn,
+                              onChanged: toggleCamera,
+                              inactiveThumbColor: AppTheme.colors.primaryColor,
+                              inactiveTrackColor:
+                                  AppTheme.colors.darkLightBackgroundColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -157,94 +196,25 @@ State Functionality:
       ),
     );
   }
+}
 
-  // App Bar
-  AppBar appBar() {
-    return AppBar(
-      backgroundColor: AppTheme.colors.darkBackgroundColor,
-      title: Text(
-        'Vox Manus',
-        style: TextStyle(
-          color: AppTheme.colors.primaryColor,
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
-        ),
+// App Bar
+AppBar appBar() {
+  return AppBar(
+    backgroundColor: AppTheme.colors.darkBackgroundColor,
+    title: Text(
+      'Vox Manus',
+      style: TextStyle(
+        color: AppTheme.colors.primaryColor,
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
       ),
-      centerTitle: true,
-      toolbarHeight: 50,
-      elevation: 0.0,
-    );
-  }
-
-  // Bottom Nav
-  BottomNavigationBar bottomNav() {
-    return BottomNavigationBar(
-      backgroundColor: AppTheme.colors.darkLightBackgroundColor,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home, color: AppTheme.colors.primaryColor),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.translate, color: AppTheme.colors.primaryColor),
-          label: 'Translate',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle, color: AppTheme.colors.primaryColor),
-          label: 'Account',
-        ),
-      ],
-    );
-  }
+    ),
+    centerTitle: true,
+    toolbarHeight: 60,
+    elevation: 0.0,
+    actions: const [
+      LogoutButton(),
+    ],
+  );
 }
-
-// Separate widget for camera preview
-class CameraWidget extends StatefulWidget {
-  final CameraController cameraController;
-  final bool isCameraInitialized;
-  final String errorMessage;
-
-  const CameraWidget({
-    required this.cameraController,
-    required this.isCameraInitialized,
-    required this.errorMessage,
-  });
-
-  @override
-  State<CameraWidget> createState() => _CameraWidgetState();
-}
-
-class _CameraWidgetState extends State<CameraWidget> {
-  @override
-  Widget build(BuildContext context) {
-    if (widget.errorMessage.isNotEmpty) {
-      return Center(
-        child: Text(
-          widget.errorMessage,
-          style: const TextStyle(color: Colors.red, fontSize: 16),
-        ),
-      );
-    }
-
-    if (!widget.isCameraInitialized ||
-        !widget.cameraController.value.isInitialized) {
-      return Container(
-        color: Colors.black,
-        height: 320,
-        width: 330,
-        child:
-            const Icon(Icons.photo_camera_back, color: Colors.white, size: 40),
-      );
-    }
-
-    return SizedBox(
-      height: 500,
-      width: 400,
-      child: AspectRatio(
-        aspectRatio: widget.cameraController.value.aspectRatio,
-        child: CameraPreview(widget.cameraController),
-      ),
-    );
-  }
-}
-

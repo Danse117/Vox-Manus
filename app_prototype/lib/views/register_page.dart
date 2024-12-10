@@ -1,34 +1,41 @@
+import 'package:flutter/material.dart';
+
 import 'package:app_prototype/components/mainbutton.dart';
 import 'package:app_prototype/components/textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../theme/app_theme.dart';
 import '../services/google_sign.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.onTap});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key, required this.onTap});
   final Function()? onTap;
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   // Text controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final passwordConfirmController = TextEditingController();
 
-  // Sign in function
-  void signUserIn() async {
+  // Sign up function
+  void signUserUp() async {
     showDialog(
         context: context,
         builder: (context) => const Center(child: CircularProgressIndicator()));
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      if (passwordController.text == passwordConfirmController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } else {
+        showErrorMessage("Passwords do not match");
+        Navigator.pop(context);
+      }
       // Pop the loading dialog AFTER the user is signed in
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -67,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
                 Text(
                   'Vox Manus',
                   style: TextStyle(
@@ -79,14 +86,14 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Welcome Text
                 Text(
-                  "Welcome!",
+                  "Create an account below!",
                   style: TextStyle(
                     color: AppTheme.colors.primaryColor,
                     fontSize: 20,
                   ),
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
 
                 //Username textfield
                 TextFieldWidget(
@@ -102,27 +109,19 @@ class _LoginPageState extends State<LoginPage> {
                     controller: passwordController,
                     obscureText: true),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
 
-                // Forgot Password Text
-                GestureDetector(
-                  onTap: null,
-                  child: Text(
-                    "Forgot Password?",
-                    style: TextStyle(
-                      color: AppTheme.colors.primaryColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                //Confirm Password textfield
+                TextFieldWidget(
+                    hintText: "Confirm Password",
+                    controller: passwordConfirmController,
+                    obscureText: true),
 
                 const SizedBox(height: 25),
 
-                //Login Button
-                MainButton(onTap: signUserIn, buttonText: "Login"),
-
-                const SizedBox(height: 25),
+                //Sign Up Button
+                MainButton(onTap: signUserUp, buttonText: "Sign Up!"),
+                const SizedBox(height: 20),
 
                 //Continue with Google Button
                 Padding(
@@ -150,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 20),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -175,14 +174,14 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Don't have an account?",
+                      "Already have an account?",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
                       onTap: widget.onTap,
                       child: Text(
-                        "Register Now!",
+                        "Login Now!",
                         style: TextStyle(
                             color: AppTheme.colors.primaryColor,
                             fontSize: 15,
