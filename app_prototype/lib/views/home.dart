@@ -1,14 +1,12 @@
 import 'dart:io';
+
 import 'package:app_prototype/components/camerawidget.dart';
 import 'package:app_prototype/main.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import '../theme/app_theme.dart';
-import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
 import '../components/translatetext.dart';
 import '../components/bottomnav.dart';
 import '../components/logout.dart';
@@ -20,11 +18,14 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> {
   late CameraController _cameraController;
   bool isCameraInitialized = false;
   bool isCameraOn = true;
   bool isTextMode = false;
+  File? _image;
+  late ImagePicker _imagePicker;
 /*
 Camera Functionality:
   toggleMode()
@@ -121,7 +122,7 @@ State Functionality:
           backgroundColor: AppTheme.colors.darkLightBackgroundColor,
           body: Container(
             decoration: BoxDecoration(
-              color: AppTheme.colors.primaryColor,
+              color: Colors.black26,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -131,18 +132,18 @@ State Functionality:
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.camera_enhance,
-                          size: 30, color: AppTheme.colors.darkBackgroundColor),
+                    children: <Widget>[
+                      Icon(Icons.camera,
+                          size: 30, color: AppTheme.colors.primaryLight),
                       Switch(
                         value: isTextMode,
                         onChanged: toggleMode,
-                        inactiveThumbColor: AppTheme.colors.primaryColor,
+                        inactiveThumbColor: const Color.fromARGB(255, 7, 5, 12),
                         inactiveTrackColor:
                             AppTheme.colors.darkLightBackgroundColor,
                       ),
                       Icon(Icons.translate,
-                          size: 30, color: AppTheme.colors.darkBackgroundColor),
+                          size: 30, color: AppTheme.colors.primaryLight),
                     ],
                   ),
                 ),
@@ -171,7 +172,7 @@ State Functionality:
                             Text(
                               "Camera",
                               style: TextStyle(
-                                color: AppTheme.colors.darkBackgroundColor,
+                                color: AppTheme.colors.primaryLight,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -191,7 +192,7 @@ State Functionality:
               ],
             ),
           ),
-          bottomNavigationBar: bottomNav(),
+          bottomNavigationBar: bottomNav(context),
         ),
       ),
     );

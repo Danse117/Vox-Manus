@@ -23,6 +23,8 @@ class _TextModeWidgetState extends State<TextModeWidget> {
     print('Translating: $textToTranslate');
   }
 
+
+  //TODO: Find and integrate API for translating text to sign language
   @override
   Widget build(BuildContext context) {
     return Padding(

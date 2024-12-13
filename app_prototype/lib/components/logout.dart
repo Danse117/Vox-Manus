@@ -24,7 +24,21 @@ class LogoutButton extends StatelessWidget {
                   actions: [
                     TextButton(
                         onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Cancel",
+                            style: TextStyle(
+                                color: AppTheme.colors.primaryColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold))),
+                    TextButton(
+                        onPressed: () {
                           FirebaseAuth.instance.signOut();
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            '/splash',
+                            (route) => false,
+                          );
                         },
                         child: Text("Logout :)",
                             style: TextStyle(

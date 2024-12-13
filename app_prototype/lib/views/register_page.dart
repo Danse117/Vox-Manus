@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:app_prototype/components/mainbutton.dart';
 import 'package:app_prototype/components/textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../services/google_sign.dart';
 
@@ -19,6 +17,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final displayNameController = TextEditingController();
 
   // Sign up function
   void signUserUp() async {
@@ -32,14 +32,19 @@ class _RegisterPageState extends State<RegisterPage> {
           email: emailController.text,
           password: passwordController.text,
         );
+        await FirebaseAuth.instance.currentUser!.updateProfile(
+          displayName: displayNameController.text,
+        );
       } else {
         showErrorMessage("Passwords do not match");
         Navigator.pop(context);
       }
       // Pop the loading dialog AFTER the user is signed in
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // Pop the loading dialog if there is an error
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
       // Show error message
       showErrorMessage(e.code);
@@ -95,6 +100,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 30),
 
+                //Display Name textfield
+                TextFieldWidget(
+                    hintText: "Display Name",
+                    controller: displayNameController,
+                    obscureText: false),
+                const SizedBox(height: 10),
                 //Username textfield
                 TextFieldWidget(
                     hintText: "Email",
