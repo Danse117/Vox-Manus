@@ -11,6 +11,7 @@ class PageTransitions {
           child: child,
         );
       },
+      transitionDuration: const Duration(milliseconds: 450),
     );
   }
 
@@ -53,5 +54,7 @@ class PageTransitions {
       },
       transitionDuration: const Duration(milliseconds: 300),
     );
+    
+
   }
 }

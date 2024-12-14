@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../components/bottomnav.dart';
+import '../components/bottom_nav.dart';
 import '../theme/app_theme.dart';
 import '../components/logout.dart';
 
@@ -25,7 +25,7 @@ class _AccountPageState extends State<AccountPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            
+
             // Placeholder for user avatar
             const CircleAvatar(
               radius: 50,

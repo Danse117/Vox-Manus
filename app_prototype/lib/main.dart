@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:app_prototype/views/home.dart';
-import 'package:app_prototype/views/account_page.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -32,8 +31,8 @@ class MyApp extends StatelessWidget {
       home: AppSplashPage(),
       routes: {
         '/home': (context) => HomePage(),
-        '/account': (context) => AccountPage(),
-        '/splash': (context) => AppSplashPage(),
+        '/account': (context) => const AccountPage(),
+        '/splash': (context) => const AppSplashPage(),
       },
     );
   }

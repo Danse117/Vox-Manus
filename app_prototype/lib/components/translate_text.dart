@@ -35,7 +35,7 @@ class _TextModeWidgetState extends State<TextModeWidget> {
             controller: _textController,
             decoration: InputDecoration(
               hintText: 'Enter text to translate to sign language',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               fillColor: AppTheme.colors.darkLightBackgroundColor,
               filled: true,
             ),

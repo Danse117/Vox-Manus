@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app_prototype/components/mainbutton.dart';
-import 'package:app_prototype/components/textfield.dart';
+import 'package:app_prototype/components/main_button.dart';
+import 'package:app_prototype/components/text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../theme/app_theme.dart';
 import '../services/google_sign.dart';
@@ -88,6 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(height: 10),
 
                 // Welcome Text
                 Text(
@@ -95,10 +96,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(
                     color: AppTheme.colors.primaryColor,
                     fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
 
                 //Display Name textfield
                 TextFieldWidget(
@@ -119,9 +120,18 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: "Password",
                     controller: passwordController,
                     obscureText: true),
-
-                const SizedBox(height: 10),
-
+                Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Passwords must have: 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character",
+                        style: TextStyle(
+                            color: AppTheme.colors.primaryColor, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
                 //Confirm Password textfield
                 TextFieldWidget(
                     hintText: "Confirm Password",

@@ -1,8 +1,8 @@
-import 'package:app_prototype/components/mainbutton.dart';
-import 'package:app_prototype/components/textfield.dart';
+import 'package:app_prototype/components/main_button.dart';
+import 'package:app_prototype/components/text_field.dart';
+import 'package:app_prototype/views/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../theme/app_theme.dart';
 import '../services/google_sign.dart';
 
@@ -81,8 +81,9 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   "Welcome!",
                   style: TextStyle(
-                    color: AppTheme.colors.primaryColor,
+                    color: AppTheme.colors.primaryLight,
                     fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
@@ -106,7 +107,13 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Forgot Password Text
                 GestureDetector(
-                  onTap: null,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgotPasswordPage()),
+                    );
+                  },
                   child: Text(
                     "Forgot Password?",
                     style: TextStyle(
@@ -132,18 +139,19 @@ class _LoginPageState extends State<LoginPage> {
                       Expanded(
                           child: Divider(
                         color: AppTheme.colors.primaryColor,
-                        thickness: 0.5,
+                        thickness: 1,
                       )),
                       Text(
                         " Or continue with ",
                         style: TextStyle(
                           color: AppTheme.colors.primaryColor,
                           fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Expanded(
                           child: Divider(
-                        thickness: 0.5,
+                        thickness: 1,
                         color: AppTheme.colors.primaryColor,
                       )),
                     ],

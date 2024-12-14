@@ -1,14 +1,11 @@
-import 'dart:io';
-
-import 'package:app_prototype/components/camerawidget.dart';
+import 'package:app_prototype/components/camera_widget.dart';
 import 'package:app_prototype/main.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import '../theme/app_theme.dart';
-import '../components/translatetext.dart';
-import '../components/bottomnav.dart';
+import '../components/translate_text.dart';
+import '../components/bottom_nav.dart';
 import '../components/logout.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,8 +21,7 @@ class _HomePageState extends State<HomePage> {
   bool isCameraInitialized = false;
   bool isCameraOn = true;
   bool isTextMode = false;
-  File? _image;
-  late ImagePicker _imagePicker;
+
 /*
 Camera Functionality:
   toggleMode()
@@ -68,6 +64,8 @@ Camera Functionality:
         setState(() {
           isCameraInitialized = true;
         });
+      }).catchError((error) {
+        Text("Error initializing camera: $error");
       });
     }
   }
@@ -120,77 +118,67 @@ State Functionality:
           resizeToAvoidBottomInset: true,
           appBar: appBar(),
           backgroundColor: AppTheme.colors.darkLightBackgroundColor,
-          body: Container(
-            decoration: BoxDecoration(
-              color: Colors.black26,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // Mode toggle switch
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.camera,
-                          size: 30, color: AppTheme.colors.primaryLight),
-                      Switch(
-                        value: isTextMode,
-                        onChanged: toggleMode,
-                        inactiveThumbColor: const Color.fromARGB(255, 7, 5, 12),
-                        inactiveTrackColor:
-                            AppTheme.colors.darkLightBackgroundColor,
-                      ),
-                      Icon(Icons.translate,
-                          size: 30, color: AppTheme.colors.primaryLight),
-                    ],
-                  ),
+          body: Column(
+            children: [
+              // Mode Toggle (Camera/Text)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.camera_enhance,
+                        size: 30, color: AppTheme.colors.primaryLight),
+                    Switch(
+                      value: isTextMode,
+                      onChanged: toggleMode,
+                      inactiveThumbColor: AppTheme.colors.primaryColor,
+                      inactiveTrackColor: Colors.white,
+                    ),
+                    Icon(Icons.translate,
+                        size: 30, color: AppTheme.colors.primaryLight),
+                  ],
                 ),
-                // Show either TextModeWidget or CameraWidget based on mode
-                if (isTextMode)
-                  const TextModeWidget()
-                else
-                  Column(
-                    children: [
-                      Stack(
+              ),
+
+              // Main Content Area
+              Expanded(
+                child: isTextMode
+                    ? const TextModeWidget()
+                    : Column(
                         children: [
-                          Center(
+                          Expanded(
                             child: CameraWidget(
                               cameraController: _cameraController,
                               isCameraInitialized: isCameraInitialized,
                             ),
                           ),
+                          // Camera toggle
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Camera",
+                                style: TextStyle(
+                                  color: AppTheme.colors.primaryLight,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Switch(
+                                value: isCameraOn,
+                                onChanged: toggleCamera,
+                                inactiveThumbColor:
+                                    AppTheme.colors.primaryColor,
+                                inactiveTrackColor:
+                                    AppTheme.colors.darkLightBackgroundColor,
+                                
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                      // Camera toggle
-                      Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Camera",
-                              style: TextStyle(
-                                color: AppTheme.colors.primaryLight,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Switch(
-                              value: isCameraOn,
-                              onChanged: toggleCamera,
-                              inactiveThumbColor: AppTheme.colors.primaryColor,
-                              inactiveTrackColor:
-                                  AppTheme.colors.darkLightBackgroundColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
           bottomNavigationBar: bottomNav(context),
         ),

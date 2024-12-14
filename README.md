@@ -15,22 +15,21 @@ Vox Manus is an American Sign Language (ASL) recognition application that uses s
   - Google Colab (for model training)
 ---
 ## 📁 Project Structure
+```
 vox_manus/
 ├── lib/ # Flutter source code
-│ ├── models/ # Data models
-│ ├── screens/ # UI screens
+│ ├── views/ # UI screens
 │ ├── services/ # Business logic and services
-│ ├── widgets/ # Reusable widgets
+│ ├── components/ # Reusable widgets
 │ └── main.dart # Entry point
-│
-├── ml/ # Machine Learning components
-│ ├── models/ # Trained models (.tflite)
-│ ├── training/ # Training scripts and notebooks
-│ └── utils/ # ML utilities
 │
 ├── assets/ # Static assets
 │ ├── images/
 │ └── fonts/
+│
+├── models/ # Trained models (.tflite)
+│  ├── First_Train/
+│  └── Second_Train/
 │
 ├── test/ # Test files
 ├── android/ # Android-specific code
@@ -40,6 +39,7 @@ vox_manus/
 ├── pubspec.yaml # Flutter dependencies
 ├── README.md # Project documentation
 └── .gitignore # Git ignore file
+```
 
 ---
 
@@ -69,9 +69,7 @@ Before you begin, ensure you have the following installed:
 ---
 
 ## 🏃‍♀️‍➡️ TODO
-- [ ] Make home look nicer
-- [ ] Change camera to take pictures instead of video and intergrate with YOLOv9
 - [ ] Train models of varying datasets
-- [ ] Save user information/translations in Firebase
-
-
+- [ ] Intergrate custom model (First_Train, Second_Train)
+- [ ] Consider using Firebase to save/store trained models
+- [ ] Save user itranslations in Firebase

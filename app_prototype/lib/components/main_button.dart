@@ -20,7 +20,7 @@ class MainButton extends StatelessWidget {
         child: Center(
         child: Text(
           buttonText,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 15,
             fontWeight: FontWeight.bold,
