@@ -50,7 +50,7 @@ class _CameraWidgetState extends State<CameraWidget> {
     super.initState();
     _picker = ImagePicker();
     _imageLabeler = ImageLabeler(
-      options: ImageLabelerOptions(confidenceThreshold: 0.5),
+      options: ImageLabelerOptions(confidenceThreshold: 0.9),
     );
     // _objectDetector = ObjectDetector(options: _objectDetectorOptions);
 
