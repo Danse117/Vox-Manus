@@ -57,17 +57,17 @@ vox_manus/
 
 ***First Train With 20 Epochs***
 
-<img src="models/First_Train/20_Epoch.gif" height=400>
+<img src="models/First_Train/20_Epoch.gif" height=300>
 
-<img src="models/First_Train/Benchmarks/first_train_confusion_matrix.png" height=400> <img src="models\First_Train\Benchmarks\first_train_loss_graphs.png" height=400>
+<img src="models/First_Train/Benchmarks/first_train_confusion_matrix.png" height=300> <img src="models\First_Train\Benchmarks\first_train_loss_graphs.png" height=300>
 
 ---
 
 ***Second Training With 50 Epochs***
 
-<img src="models/Second_Train/50_Epoch.gif" height=400>
+<img src="models/Second_Train/50_Epoch.gif" height=300>
 
-<img src="models/Second_Train/Benchmarks/second_train_confusion_matrix.png" height=400> <img src="models\Second_Train\Benchmarks\second_train_loss_graphs.png" height=400>
+<img src="models/Second_Train/Benchmarks/second_train_confusion_matrix.png" height=300> <img src="models\Second_Train\Benchmarks\second_train_loss_graphs.png" height=300>
 
 ---
 ## 📱 Mobile Application Updates
