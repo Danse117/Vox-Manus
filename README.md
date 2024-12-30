@@ -56,6 +56,7 @@ vox_manus/
 ## 📋 ASL YOLOv9 Model Benchmarks
 
 ***First Train With 20 Epochs***
+
 <img src="models/First_Train/20_Epoch.gif" height=400>
 
 <img src="models/First_Train/Benchmarks/first_train_confusion_matrix.png" height=400> <img src="models\First_Train\Benchmarks\first_train_loss_graphs.png" height=400>
@@ -63,6 +64,7 @@ vox_manus/
 ---
 
 ***Second Training With 50 Epochs***
+
 <img src="models/Second_Train/50_Epoch.gif" height=400>
 
 <img src="models/Second_Train/Benchmarks/second_train_confusion_matrix.png" height=400> <img src="models\Second_Train\Benchmarks\second_train_loss_graphs.png" height=400>
@@ -71,15 +73,19 @@ vox_manus/
 ## 📱 Mobile Application Updates
 
 **Homepage Version 1**
+
 <img src="updates/Homepage_V1.png" height=400>
 
 **Homepage Version 2**
+
 <img src="updates/Homepage_V2.png" height=400>
 
 **Homepage  Version 3**
+
 <img src="updates/Homepage_V3.jpg" height=400>   <img src="updates/Homepage_V3_1.jpg" height=400>
 
 **Login Page**
+
 <img src="updates/Login_V1.jpg" height=400>
 
 ---
@@ -98,8 +104,9 @@ vox_manus/
 - [Flutter Authentication Tutorials by Mitch Koko](https://www.youtube.com/watch?v=Dh-cTQJgM-Q&list=PLlvRDpXh1Se4Ceivpg8KrGvzb8BL9BHwo)
 ---
 
-## 🏃‍♀️‍➡️ TODO
-- [ ] Train models of varying datasets
-- [ ] Intergrate custom model (First_Train, Second_Train)
-- [ ] Consider using Firebase to save/store trained models
-- [ ] Save user itranslations in Firebase
+## 🏃‍♀️‍➡️ TODO / Things to fix
+- [ ] Intergrate custom model to work with CameraWidget (First_Train, Second_Train)
+- [ ] Consider using Firebase to store/run trained models
+- [ ] Implement Text to Gesture translation using an API
+- [ ] Save user translation's locally to the user's device
+- [ ] Possibly move the project to IOS instead of Android if the TensorFlow packages still have issues
