@@ -39,6 +39,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Displays an error message to the user if either of their credentials is wrong
+  
   void showErrorMessage(String message) {
     showDialog(
         context: context,
@@ -59,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       backgroundColor: AppTheme.colors.darkLightBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -67,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo
+                
                 const SizedBox(height: 50),
                 Text(
                   'Vox Manus',
@@ -78,10 +82,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 // Welcome Text
-                Text(
+                const Text(
                   "Welcome!",
                   style: TextStyle(
-                    color: AppTheme.colors.primaryLight,
+                    color:    Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -141,10 +145,10 @@ class _LoginPageState extends State<LoginPage> {
                         color: AppTheme.colors.primaryColor,
                         thickness: 1,
                       )),
-                      Text(
+                      const Text(
                         " Or continue with ",
                         style: TextStyle(
-                          color: AppTheme.colors.primaryColor,
+                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),

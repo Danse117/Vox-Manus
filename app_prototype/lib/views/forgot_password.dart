@@ -71,11 +71,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: passwordReset,
-              child: const Text('Reset Password',
-                  style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.colors.primaryColor,
               ),
+              child: const Text('Reset Password',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

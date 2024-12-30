@@ -1,7 +1,6 @@
 # Vox Manus 🤟
 ---
 > ASL Recognition App built with YOLOv9 and Flutter 
-
 ---
 
 ## Overview
@@ -57,14 +56,34 @@ vox_manus/
 ## 📋 ASL YOLOv9 Model Benchmarks
 
 ***First Train With 20 Epochs***
-<img src="models/First_Train/Benchmarks/first_train_confusion_matrix.png" height=400>
-<img src="models\First_Train\Benchmarks\first_train_loss_graphs.png" height=400>
+<img src="models/First_Train/20_Epoch.gif" height=400>
 
-***Second Training With 50 Epochs***
-<img src="models/Second_Train/Benchmarks/second_train_confusion_matrix.png" height=400> 
-<img src="models\Second_Train\Benchmarks\second_train_loss_graphs.png" height=400>
+<img src="models/First_Train/Benchmarks/first_train_confusion_matrix.png" height=400> <img src="models\First_Train\Benchmarks\first_train_loss_graphs.png" height=400>
 
 ---
+
+***Second Training With 50 Epochs***
+<img src="models/Second_Train/50_Epoch.gif" height=400>
+
+<img src="models/Second_Train/Benchmarks/second_train_confusion_matrix.png" height=400> <img src="models\Second_Train\Benchmarks\second_train_loss_graphs.png" height=400>
+
+---
+## 📱 Mobile Application Updates
+
+**Homepage Version 1**
+<img src="updates/Homepage_V1.png" height=400>
+
+**Homepage Version 2**
+<img src="updates/Homepage_V2.png" height=400>
+
+**Homepage  Version 3**
+<img src="updates/Homepage_V3.jpg" height=400>   <img src="updates/Homepage_V3_1.jpg" height=400>
+
+**Login Page**
+<img src="updates/Login_V1.jpg" height=400>
+
+---
+
 ## 📚 Documentation
 - [Ultralytics Documentation](https://docs.ultralytics.com/)
 - [YOLOv9 Documentation](https://github.com/WongKinYiu/yolov9)

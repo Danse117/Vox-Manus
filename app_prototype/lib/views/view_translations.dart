@@ -10,6 +10,7 @@ class ViewTranslations extends StatefulWidget {
   State<ViewTranslations> createState() => _ViewTranslationsState();
 }
 
+//TODO: Implement user saving last 5 translations
 class _ViewTranslationsState extends State<ViewTranslations> {
   @override
   Widget build(BuildContext context) {

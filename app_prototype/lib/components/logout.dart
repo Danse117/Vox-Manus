@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:app_prototype/theme/app_theme.dart';
 
 void signUserOut() {
-
   FirebaseAuth.instance.signOut();
 }
 
@@ -33,12 +32,7 @@ class LogoutButton extends StatelessWidget {
                                 fontWeight: FontWeight.bold))),
                     TextButton(
                         onPressed: () {
-                          FirebaseAuth.instance.signOut();
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            '/splash',
-                            (route) => false,
-                          );
+                          signOut(context);
                         },
                         child: Text("Logout :)",
                             style: TextStyle(
@@ -52,4 +46,13 @@ class LogoutButton extends StatelessWidget {
           color: AppTheme.colors.primaryColor,
         ));
   }
+}
+
+void signOut(context) {
+  FirebaseAuth.instance.signOut();
+  Navigator.pushNamedAndRemoveUntil(
+    context,
+    '/splash',
+    (route) => false,
+  );
 }

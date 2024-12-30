@@ -6,7 +6,7 @@ import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:app_prototype/views/home.dart';
 
-List<CameraDescription> cameras = [];
+List<CameraDescription> cameras = []; // User cameras
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       theme: ThemeData(
         fontFamily: 'Sans-serif',
       ),
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => HomePage(),
         '/account': (context) => const AccountPage(),
-        '/splash': (context) => const AppSplashPage(),
+        '/splash': (context) => const AppSplashPage()
       },
     );
   }

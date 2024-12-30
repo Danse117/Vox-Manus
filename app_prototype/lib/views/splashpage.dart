@@ -29,10 +29,10 @@ class _AppSplashPageState extends State<AppSplashPage> {
                     fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              Text(
+              const Text(
                 'Hands speak, we listen',
                 style: TextStyle(
-                    color: AppTheme.colors.primaryLight,
+                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold),
               ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app_prototype/components/main_button.dart';
 import 'package:app_prototype/components/text_field.dart';
@@ -17,24 +18,29 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
-  final phoneNumberController = TextEditingController();
   final displayNameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
 
   // Sign up function
-  void signUserUp() async {
+  Future signUserUp() async {
     showDialog(
         context: context,
         builder: (context) => const Center(child: CircularProgressIndicator()));
-
     try {
       if (passwordController.text == passwordConfirmController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
         );
         await FirebaseAuth.instance.currentUser!.updateProfile(
-          displayName: displayNameController.text,
+          displayName: displayNameController.text.trim(),
         );
+        addUserInformation(
+            emailController.text.trim(),
+            displayNameController.text.trim(),
+            firstNameController.text.trim(),
+            lastNameController.text.trim());
       } else {
         showErrorMessage("Passwords do not match");
         Navigator.pop(context);
@@ -49,6 +55,17 @@ class _RegisterPageState extends State<RegisterPage> {
       // Show error message
       showErrorMessage(e.code);
     }
+  }
+
+// Adding User information to collection on Google Firestore
+  Future addUserInformation(
+      String email, String userName, String firstName, String lastName) async {
+    await FirebaseFirestore.instance.collection("Users").add({
+      "email": email,
+      "firstName": firstName,
+      "lastName": lastName,
+      "userName": userName,
+    });
   }
 
   void showErrorMessage(String message) {
@@ -91,10 +108,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 10),
 
                 // Welcome Text
-                Text(
+                const Text(
                   "Create an account below!",
                   style: TextStyle(
-                    color: AppTheme.colors.primaryColor,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -103,16 +120,32 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 //Display Name textfield
                 TextFieldWidget(
+                    hintText: "First Name",
+                    controller: firstNameController,
+                    obscureText: false),
+
+                const SizedBox(height: 10),
+
+                //Display Name textfield
+                TextFieldWidget(
+                    hintText: "Last Name",
+                    controller: lastNameController,
+                    obscureText: false),
+
+                const SizedBox(height: 10),
+
+                //Display Name textfield
+                TextFieldWidget(
                     hintText: "Display Name",
                     controller: displayNameController,
                     obscureText: false),
                 const SizedBox(height: 10),
+
                 //Username textfield
                 TextFieldWidget(
                     hintText: "Email",
                     controller: emailController,
                     obscureText: false),
-
                 const SizedBox(height: 10),
 
                 //Password textfield
@@ -120,14 +153,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: "Password",
                     controller: passwordController,
                     obscureText: true),
-                Padding(
-                  padding: const EdgeInsets.all(25.0),
+                const Padding(
+                  padding: EdgeInsets.all(25.0),
                   child: Column(
                     children: [
                       Text(
-                        "Passwords must have: 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character",
+                        "Passwords must have: 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character. Ex. Password123!",
                         style: TextStyle(
-                            color: AppTheme.colors.primaryColor, fontSize: 12),
+                            color: Colors.white, fontSize: 12),
                       ),
                     ],
                   ),
@@ -154,10 +187,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         color: AppTheme.colors.primaryColor,
                         thickness: 0.5,
                       )),
-                      Text(
+                      const Text(
                         " Or continue with ",
                         style: TextStyle(
-                          color: AppTheme.colors.primaryColor,
+                          color: Colors.white,
                           fontSize: 15,
                         ),
                       ),

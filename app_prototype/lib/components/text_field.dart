@@ -25,12 +25,12 @@ class TextFieldWidget extends StatelessWidget {
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: AppTheme.colors.primaryColor),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.colors.primaryLight),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
           ),
           hintText: hintText,
           hintStyle: TextStyle(
-            color: AppTheme.colors.primaryLight,
+            color: Colors.white,
           ),
           fillColor: AppTheme.colors.darkLightBackgroundColor,
           filled: true,

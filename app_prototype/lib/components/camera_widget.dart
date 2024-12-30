@@ -1,5 +1,6 @@
 import 'package:app_prototype/components/camera_placeholder.dart';
 import 'package:app_prototype/components/show_labels.dart';
+import 'package:app_prototype/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
@@ -173,7 +174,7 @@ Future<void> processStream(CameraImage cameraImage) async {
     _captureImage()
       - Captures an image using the camera
       - Calls _processImage()
-  */ 
+  */
   Future<void> _processImage(String imagePath) async {
     final inputImage = InputImage.fromFilePath(imagePath);
     try {
@@ -185,8 +186,8 @@ Future<void> processStream(CameraImage cameraImage) async {
       );
     }
   }
-  Future<void> _chooseImage() async {
 
+  Future<void> _chooseImage() async {
     try {
       final XFile? pickedImage =
           await _picker.pickImage(source: ImageSource.gallery);
@@ -204,6 +205,7 @@ Future<void> processStream(CameraImage cameraImage) async {
     }
   }
 
+  
   Future<void> _captureImage() async {
     try {
       final XFile? pickedImage =
@@ -235,8 +237,8 @@ Future<void> processStream(CameraImage cameraImage) async {
       children: [
         // Camera preview or selected image container
         SizedBox(
-          height: 600,
-          width: 600,
+          height: 453,
+          width: 453,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(40),
             child: Stack(
@@ -286,12 +288,22 @@ Future<void> processStream(CameraImage cameraImage) async {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    ElevatedButton(
+                                    MaterialButton(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                      color: AppTheme.colors.primaryColor,
+
                                       onPressed: _chooseImage,
-                                      child: const Text('Choose/Capture'),
                                       onLongPress: () {
                                         _captureImage();
                                       },
+                                      child: const Text(
+                                        'Choose/Capture',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold
+                                            ),
+                                      ),
+                                      
                                     ),
                                   ],
                                 ),
